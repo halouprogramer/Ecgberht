@@ -17,6 +17,7 @@ import ecgberht.Strategies.*;
 import ecgberht.Util.BaseLocationComparator;
 import ecgberht.Util.MutablePair;
 import ecgberht.Util.Util;
+import ecgberht.Util.UtilMicro;
 import org.openbw.bwapi4j.*;
 import org.openbw.bwapi4j.type.*;
 import org.openbw.bwapi4j.unit.*;
@@ -609,6 +610,7 @@ public class GameState {
         List<Worker> removeGas = new ArrayList<>();
         if(!workerGas.isEmpty()) System.out.println("frame: " + frameCount);
         for (Entry<Worker, GasMiningFacility> w : workerGas.entrySet()) {
+            if(frameCount == w.getKey().getLastCommandFrame()) continue;
             System.out.println("---------");
             System.out.println("SCV: " + w.getKey());
             System.out.println("SCV exists: " + w.getKey().exists());
@@ -624,12 +626,12 @@ public class GameState {
                 System.out.println("SCV target isCompleted: " + (u instanceof Refinery && ((Refinery) u).isCompleted()));
                 System.out.println("SCV target player==self: " + (u instanceof Refinery && ((Refinery) u).getPlayer().equals(self)));
             }
-            if (!w.getKey().isGatheringGas()) {
+            /*if (!w.getKey().isGatheringGas()) {
                 removeGas.add(w.getKey());
                 refineriesAssigned.put(w.getValue(), refineriesAssigned.get(w.getValue()) - 1);
                 w.getKey().stop(false);
                 workerIdle.add(w.getKey());
-            }
+            }*/
             System.out.println("---------");
         }
         for (Worker u : removeGas) workerGas.remove(u);
@@ -846,11 +848,12 @@ public class GameState {
 
     void mineralLocking() {
         for (Entry<Worker, MineralPatch> u : workerMining.entrySet()) {
+            if (frameCount == u.getKey().getLastCommandFrame()) continue;
             if (u.getKey().isIdle() || (u.getKey().getTargetUnit() == null && !Order.MoveToMinerals.equals(u.getKey().getOrder())))
-                u.getKey().gather(u.getValue());
+                UtilMicro.gather(u.getKey(),u.getValue());
             else if (u.getKey().getTargetUnit() != null && !u.getKey().getTargetUnit().equals(u.getValue())
                     && u.getKey().getOrder() == Order.MoveToMinerals && !u.getKey().isCarryingMinerals()) {
-                u.getKey().gather(u.getValue());
+                UtilMicro.gather(u.getKey(),u.getValue());
             }
         }
     }

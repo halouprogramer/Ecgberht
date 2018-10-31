@@ -56,6 +56,11 @@ public class UtilMicro {
         vessel.empShockWave(pos);
     }
 
+    public static boolean gather(Worker w, Gatherable g){
+        if(getGs().frameCount == w.getLastCommandFrame()) return false;
+        return w.gather(g, false);
+    }
+
     public static void move(MobileUnit u, Position pos) {
         if (pos == null || u == null || !u.exists()) return;
         Position targetPos = u.getTargetPosition();

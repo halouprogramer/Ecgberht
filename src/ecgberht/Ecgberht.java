@@ -438,7 +438,33 @@ public class Ecgberht implements BWEventListener {
             gs.cancelDyingThings();
             IntelligenceAgency.updateBullets();
             gs.wizard.onFrameSpellManager();
-            gs.fix();
+            //gs.fix();
+            if(!gs.workerGas.isEmpty()) System.out.println("frame: " + gs.frameCount);
+            for (Entry<Worker, GasMiningFacility> w : gs.workerGas.entrySet()) {
+                if(gs.frameCount == w.getKey().getLastCommandFrame()) continue;
+                System.out.println("---------");
+                System.out.println("SCV: " + w.getKey());
+                System.out.println("SCV exists: " + w.getKey().exists());
+                System.out.println("SCV isIdle: " + w.getKey().isIdle());
+                System.out.println("SCV isGatheringGas: " + w.getKey().isGatheringGas());
+                System.out.println("SCV getOrder: " + w.getKey().getOrder().toString());
+                Unit u = w.getKey().getOrderTarget();
+                System.out.println("SCV currentTargetOrder: " + u);
+                if(u != null){
+                    System.out.println("SCV target exists: " + u.exists());
+                    System.out.println("SCV target type: " + u.getType());
+                    System.out.println("SCV target is refinery: " + (u instanceof Refinery));
+                    System.out.println("SCV target isCompleted: " + (u instanceof Refinery && ((Refinery) u).isCompleted()));
+                    System.out.println("SCV target player==self: " + (u instanceof Refinery && ((Refinery) u).getPlayer().equals(self)));
+                }
+            /*if (!w.getKey().isGatheringGas()) {
+                removeGas.add(w.getKey());
+                refineriesAssigned.put(w.getValue(), refineriesAssigned.get(w.getValue()) - 1);
+                w.getKey().stop(false);
+                workerIdle.add(w.getKey());
+            }*/
+                System.out.println("---------");
+            }
             gs.updateEnemyBuildingsMemory();
             IntelligenceAgency.onFrame();
             gs.sim.onFrameSim();

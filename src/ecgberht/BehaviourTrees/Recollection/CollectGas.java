@@ -1,6 +1,7 @@
 package ecgberht.BehaviourTrees.Recollection;
 
 import ecgberht.GameState;
+import ecgberht.Util.UtilMicro;
 import org.iaie.btree.BehavioralTree.State;
 import org.iaie.btree.task.leaf.Action;
 import org.openbw.bwapi4j.unit.GasMiningFacility;
@@ -28,7 +29,7 @@ public class CollectGas extends Action {
                     }
                 }
                 if (closestGeyser != null) {
-                    if (chosen.gather(closestGeyser, false)) {
+                    if (UtilMicro.gather(chosen,closestGeyser)) {
                         Integer aux = this.handler.refineriesAssigned.get(closestGeyser);
                         aux++;
                         this.handler.refineriesAssigned.put(closestGeyser, aux);

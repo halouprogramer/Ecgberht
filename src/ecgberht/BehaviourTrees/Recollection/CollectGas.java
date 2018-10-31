@@ -29,7 +29,11 @@ public class CollectGas extends Action {
                     }
                 }
                 if (closestGeyser != null) {
+                    System.out.println("SCV: " + chosen);
+                    System.out.println("SCV gather frame: " + this.handler.frameCount);
+                    System.out.println("SCV isGatheringGas BeforeGather: " + chosen.isGatheringGas());
                     if (UtilMicro.gather(chosen,closestGeyser)) {
+                        System.out.println("SCV isGatheringGas AfterGather: " + chosen.isGatheringGas());
                         Integer aux = this.handler.refineriesAssigned.get(closestGeyser);
                         aux++;
                         this.handler.refineriesAssigned.put(closestGeyser, aux);
